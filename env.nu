@@ -161,6 +161,9 @@ $env.PATH = ($env.PATH | split row (char esep)
 $env.LC_ALL = 'en_GB.UTF-8'
 $env.LANG = 'en_GB.UTF-8'
 
+# XDG CONFIG
+$env.XDG_CONFIG_HOME = $"($nu.home-path)/.config"
+
 # TERM
 if "TMUX" in $env { $env.TERM = "tmux-256color" } else { $env.TERM = "xterm-256color" }
 
@@ -173,6 +176,3 @@ $env.DOTNET_ROOT = '/opt/homebrew/bin/dotnet'
 # omnisharp config home
 $env.OMNISHARPHOME = $"($nu.home-path)/.config/"
 
-# lynx config and color file
-$env.LYNX_CFG = $"($nu.home-path)/.config/lynx/lynx.cfg"
-$env.LYNX_LSS = $"($nu.home-path)/.config/lynx/lynx.lss"
