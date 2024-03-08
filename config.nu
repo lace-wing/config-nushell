@@ -807,8 +807,12 @@ $env.config = {
     ]
 }
 
+# off shell int for blinking in windows terminal
+$env.config.shell_integration = $nu.os-info.name != "windows"
+
 # zoxide init
-zoxide init nushell | save -f ~/.zoxide.nu
+#FIX outdated zoxide, run this then fix manually
+# zoxide init nushell | save -f ~/.zoxide.nu
 source ~/.zoxide.nu
 # alias cd to z, zoxide init required
 alias cd = z
@@ -847,4 +851,6 @@ alias cdtm = cd `~/Library/Application Support/Terraria/tModLoader/ModSources/`
 alias cdgit = cd (git rev-parse --show-toplevel)
 
 # enter tmux
-tmux new-session -A -s general -n main
+if $nu.os-info.name != "windows" {
+    tmux new-session -A -s general -n main
+}
