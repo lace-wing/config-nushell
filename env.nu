@@ -9,7 +9,7 @@ let username = (
     if $is_win { $env.USERNAME } else { $env.USER }
 )
 let hostname = (
-    if $is_win { hostname | str trim } else { hostname -s }
+    if $is_win { hostname | str trim } else { hostname -s | str trim }
 )
 let path_cell = (
     (if $is_win { [Path] } else { [PATH] }) | into cell-path
