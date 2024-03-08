@@ -2,6 +2,20 @@
 #
 # version = "0.88.1"
 
+# os compat
+let is_win = ($nu.os-info.name == "windows")
+let is_mac = ($nu.os-info.name == "macos")
+let username = (
+    if $is_win { $env.USERNAME } else { $env.USER }
+)
+let hostname = (
+    if $is_win { hostname | str trim } else { hostname -s }
+)
+let path_cell = (
+    (if $is_win { [Path] } else { [PATH] }) | into cell-path
+)
+def get_path [] { $env | get $path_cell | split row (char esep) }
+
 # let good_emo = [ '😎', '🥰', '🤤', '😘' ]
 # let bad_emo = [ '😭 ', '😅 ', '🤣👉 ', '💀 ', '🤡 ', '🥵 ' ]
 
@@ -61,7 +75,7 @@ def create_left_prompt [] {
     )
 
     let unm_color = ansi light_yellow_bold
-    let unm = $"($unm_color)(users)($sep_color)@($unm_color)(hostname -s)"
+    let unm = $"($unm_color)($username)($sep_color)@($unm_color)($hostname)"
 
     let power_char = (
         if (is-admin) {
@@ -145,34 +159,21 @@ $env.NU_PLUGIN_DIRS = [
     ($nu.default-config-dir | path join 'plugins') # add <nushell-config-dir>/plugins
 ]
 
-# To add entries to PATH (on Windows you might use Path), you can use the following pattern:
-# $env.PATH = ($env.PATH | split row (char esep) | prepend '/some/path')
-
-$env.PATH = ($env.PATH | split row (char esep)
-    | prepend "/opt/homebrew/bin" # add homebrew
-    | prepend "/nix/var/nix/profiles/default/bin" # add nix
-    | prepend $"($nu.home-path)/.nix-profile/bin" # add nix-env path
-    | prepend $"($nu.home-path)/.dotnet/tools" # add dotnet tools
-    | prepend "/opt/homebrew/opt/python@3.12/libexec/bin" # add homebrew python symlinks
-)
+# OS-specific env setting
+if $is_mac {
+    source $"($nu.default-config-dir)/envs/macos.nu"
+} else if $is_win {
+    source $"($nu.default-config-dir)/envs/windows.nu"
+}
 
 # lang settings
 # nvim will not function properly on UTF-8 chars without these settings
 $env.LC_ALL = 'en_GB.UTF-8'
 $env.LANG = 'en_GB.UTF-8'
 
-# XDG CONFIG
-$env.XDG_CONFIG_HOME = $"($nu.home-path)/.config"
-
 # TERM
 if "TMUX" in $env { $env.TERM = "tmux-256color" } else { $env.TERM = "xterm-256color" }
 
 # setup EDITOR
 $env.EDITOR = 'nvim'
-
-# homebrew dotnet
-$env.DOTNET_ROOT = '/opt/homebrew/bin/dotnet'
-
-# omnisharp config home
-$env.OMNISHARPHOME = $"($nu.home-path)/.config/"
 
