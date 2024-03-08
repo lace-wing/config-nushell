@@ -159,13 +159,33 @@ let carapace_completer = {|spans|
   | from json
 }
 
-mut current = (($env | default {} config).config | default {} completions)
-$current.completions = ($current.completions | default {} external)
-$current.completions.external = ($current.completions.external
-| default true enable
-| default $carapace_completer completer)
+let zoxide_completer = {|spans|
+    $spans | skip 1 | zoxide query -l $in | lines | where {|x| $x != $env.PWD}
+}
 
-$env.config = $current
+let dotnet_completer = { |spans|
+    dotnet complete ( $spans | skip 1 | str join " ") | lines
+}
+
+let external_completer = {|spans|
+    let expanded_alias = scope aliases
+    | where name == $spans.0
+    | get -i 0.expansion
+
+    let spans = if $expanded_alias != null {
+        $spans
+        | skip 1
+        | prepend ($expanded_alias | split row ' ' | take 1)
+    } else {
+        $spans
+    }
+
+    match $spans.0 {
+        __zoxide_z | __zoxide_zi => $zoxide_completer
+        dotnet => $dotnet_completer
+        _ => $carapace_completer
+    } | do $in $spans
+}
 
 # The default config record. This is where much of your global configuration is setup.
 $env.config = {
@@ -236,7 +256,7 @@ $env.config = {
         external: {
             enable: true # set to false to prevent nushell looking into $env.PATH to find more suggestions, `false` recommended for WSL users as this look up may be very slow
             max_results: 100 # setting it lower can improve completion performance at the cost of omitting some options
-            completer: $carapace_completer # check 'carapace_completer' above as an example
+            completer: $external_completer # check 'carapace_completer' above as an example
         }
     }
 
@@ -788,6 +808,7 @@ $env.config = {
 }
 
 # zoxide init
+zoxide init nushell | save -f ~/.zoxide.nu
 source ~/.zoxide.nu
 # alias cd to z, zoxide init required
 alias cd = z
@@ -810,8 +831,8 @@ def www [...q] {
 # rc alias
 alias rc = config nu
 alias erc = config env
-alias trc = nvim `~/.tmux.conf`
-alias nrc = nvim `~/.config/nvim/`
+alias trc = nvim $"($env.XDG_CONFIG_HOME)/tmux/tmux.conf"
+alias nrc = nvim $"($env.XDG_CONFIG_HOME)/nvim/"
 
 # cd alias
 alias cddoc = cd `~/Documents/`
