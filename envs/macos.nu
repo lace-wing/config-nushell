@@ -1,5 +1,6 @@
 $env.PATH = ($env.PATH | split row (char esep)
     | prepend "/opt/homebrew/bin" # add homebrew
+    | prepend "/opt/homebrew/sbin" # homebrew
     | prepend "/nix/var/nix/profiles/default/bin" # add nix
     | prepend $"($nu.home-path)/.nix-profile/bin" # add nix-env path
     | prepend $"($nu.home-path)/.dotnet/tools" # add dotnet tools

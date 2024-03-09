@@ -159,6 +159,12 @@ let carapace_completer = {|spans|
   | from json
 }
 
+let fish_completer = {|spans|
+    fish --command $'complete "--do-complete=($spans | str join " ")"'
+    | $"value(char tab)description(char newline)" + $in
+    | from tsv --flexible --no-infer
+}
+
 let zoxide_completer = {|spans|
     $spans | skip 1 | zoxide query -l $in | lines | where {|x| $x != $env.PWD}
 }
@@ -183,6 +189,7 @@ let external_completer = {|spans|
     match $spans.0 {
         __zoxide_z | __zoxide_zi => $zoxide_completer
         dotnet => $dotnet_completer
+        nu | nb => $fish_completer
         _ => $carapace_completer
     } | do $in $spans
 }
