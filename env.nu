@@ -52,7 +52,7 @@ def create_left_prompt [] {
         if (($in | str starts-with "~") or ($in | str starts-with "/")) {
             $"($sep_color):"
         } else {
-            $"($sep_color):::"
+            $"($sep_color)::"
         }
     }
 
