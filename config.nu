@@ -196,7 +196,7 @@ let external_completer = {|spans|
 
 # The default config record. This is where much of your global configuration is setup.
 $env.config = {
-    show_banner: true # true or false to enable or disable the welcome banner at startup
+    show_banner: false # true or false to enable or disable the welcome banner at startup
 
     ls: {
         use_ls_colors: true # use the LS_COLORS environment variable to colorize output
@@ -828,6 +828,9 @@ alias cd = z
 alias ll = ls -l
 alias la = ls -a
 alias tn = tmux new-session -A -s
+alias tng = tmux new-session -A -s general -n main
+alias tnw = tmux new-session -A -s work -n main
+alias tnp = tmux new-session -A -s present -n slides
 alias v = nvim
 def www [...q] {
     if ( $q | length ) > 0 {
