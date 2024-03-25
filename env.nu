@@ -177,3 +177,10 @@ if "TMUX" in $env { $env.TERM = "tmux-256color" } else { $env.TERM = "xterm-256c
 # setup EDITOR
 $env.EDITOR = 'nvim'
 
+# setup mdp
+$env.MDP_LIST_OPEN1 = '    '
+$env.MDP_LIST_OPEN2 = '    '
+$env.MDP_LIST_OPEN3 = '    '
+$env.MDP_LIST_HEAD1 = ' ⦿  '
+$env.MDP_LIST_HEAD2 = ' •  '
+$env.MDP_LIST_HEAD3 = ' ◦  '

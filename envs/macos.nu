@@ -15,3 +15,6 @@ $env.DOTNET_ROOT = '/opt/homebrew/bin/dotnet'
 
 # omnisharp config home
 $env.OMNISHARPHOME = $"($nu.home-path)/.config/"
+
+# find dylib at runtime in /usr/local/lib
+$env.DYLD_LIBRARY_PATH = "/usr/local/lib"
