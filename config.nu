@@ -822,16 +822,29 @@ $env.config.shell_integration = $nu.os-info.name != "windows"
 # zoxide init nushell | save -f ~/.zoxide.nu
 source ~/.zoxide.nu
 # alias cd to z, zoxide init required
+
+# cd via z
 alias cd = z
 
 # program alias
+
+# list as long list
 alias ll = ls -l
+# list all
 alias la = ls -a
+# list all as long list
+alias lla = ls -la
+# attach or create a TMUX session
 alias tn = tmux new-session -A -s
+# attach or create a TMUX session, named "general" with a window "main"
 alias tng = tmux new-session -A -s general -n main
+# attach or create a TMUX session, named "word" with a window "main"
 alias tnw = tmux new-session -A -s work -n main
+# attach or create a TMUX session, named "present" with a window "slides"
 alias tnp = tmux new-session -A -s present -n slides
+# neovim
 alias v = nvim
+# DuckDuckGo using w3m
 def www [...q] {
     if ( $q | length ) > 0 {
         w3m $"https://www.duckduckgo.com/lite/?q=($q | str join ' ')"
@@ -843,21 +856,37 @@ def www [...q] {
  }
 
 # rc alias
+
+# edit current shell's rc
 alias rc = config nu
+# edit current shell's env rc
 alias erc = config env
+# edit TMUX config
 alias trc = nvim $"($env.XDG_CONFIG_HOME)/tmux/tmux.conf"
+# edit Neovim config
 alias nrc = nvim $"($env.XDG_CONFIG_HOME)/nvim/"
 
 # cd alias
+
+# cd to Documents
 alias cddoc = cd `~/Documents/`
+# cd to Downloads
 alias cddow = cd `~/Downloads/`
+# cd to Desktop
 alias cddes = cd `~/Desktop/`
+# cd to Saved Pictures
 alias cdpic = cd `~/Pictures/Saved Pictures/`
+# cd to Screen Shot
 alias cdshot = cd `~/Pictures/Screen Shot/`
+# cd to Movies
 alias cdmov = cd `~/Movies/`
+# cd to Application Support
 alias cdaps = cd `~/Library/Application Support/`
+#cd to com~apple~CloudDocs (iCloud Documents)
 alias cdic = cd `~/Library/Mobile Documents/com~apple~CloudDocs`
+# cd to tModLoader/ModSources
 alias cdtm = cd `~/Library/Application Support/Terraria/tModLoader/ModSources/`
+# cd to current git's root dir
 alias cdgit = cd (git rev-parse --show-toplevel)
 
 # enter tmux
