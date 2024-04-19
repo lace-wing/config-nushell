@@ -3,7 +3,7 @@
 # version = "0.88.1"
 
 # os compat
-use `modules/os.nu` *
+use $"($nu.default-config-dir)/modules/os.nu" *
 
 # let good_emo = [ '😎', '🥰', '🤤', '😘' ]
 # let bad_emo = [ '😭 ', '😅 ', '🤣👉 ', '💀 ', '🤡 ', '🥵 ' ]
@@ -151,7 +151,7 @@ $env.NU_PLUGIN_DIRS = [
 ]
 
 # OS-specific env setting
-use $"modules/env/($nu.os-info.name).nu"
+use $"($nu.default-config-dir)/modules/env/($nu.os-info.name).nu"
 
 # lang settings
 # nvim will not function properly on UTF-8 chars without these settings

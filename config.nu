@@ -2,7 +2,7 @@
 #
 # version = "0.88.1"
 
-use "modules/os.nu" *
+use $"($nu.default-config-dir)/modules/os.nu" *
 
 # For more information on defining custom themes, see
 # https://www.nushell.sh/book/coloring_and_theming.html
@@ -869,7 +869,7 @@ alias erc = config env
 # cd to current git's root dir
 alias cdgit = cd (git rev-parse --show-toplevel)
 
-use $"modules/config/($nu.os-info.name).nu" *
+use $"($nu.default-config-dir)/modules/config/($nu.os-info.name).nu" *
 
 # enter tmux
 if not (is-win) {
