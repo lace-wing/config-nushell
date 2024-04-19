@@ -3,23 +3,13 @@
 # version = "0.88.1"
 
 # os compat
-let is_win = ($nu.os-info.name == "windows")
-let is_mac = ($nu.os-info.name == "macos")
-let username = (
-    if $is_win { $env.USERNAME } else { $env.USER }
-)
-let hostname = (
-    if $is_win { hostname | str trim } else { hostname -s | str trim }
-)
-let path_cell = (
-    (if $is_win { [Path] } else { [PATH] }) | into cell-path
-)
-def get_path [] { $env | get $path_cell | split row (char esep) }
+use `modules/os.nu` *
 
 # let good_emo = [ '😎', '🥰', '🤤', '😘' ]
 # let bad_emo = [ '😭 ', '😅 ', '🤣👉 ', '💀 ', '🤡 ', '🥵 ' ]
 
-def with_home_char [] {
+# convert raw path to one with '~' for $nu.home-path
+def with-home-char [] {
     if ($in | path split | zip ($nu.home-path | path split) | all { $in.0 == $in.1 }) {
         ($in | str replace $nu.home-path "~")
     } else {
@@ -27,8 +17,9 @@ def with_home_char [] {
     }
 }
 
-def with_tail_dir [c: int = 3] {
-    $in | path split | last $c | path join
+# trim the path to the last $count segments
+def with-tail-dir [count: int = 3] {
+    $in | path split | last $count | path join
 }
 
 def create_left_prompt [] {
@@ -42,7 +33,7 @@ def create_left_prompt [] {
     # Inside the condition, either:
     # 1. The home prefix will be replaced
     # 2. The current dir is a parent of the home dir, so it will be uneffected by the str replace
-    let dir = $env.PWD | with_home_char | with_tail_dir
+    let dir = $env.PWD | with-home-char | with-tail-dir
 
     let sep_color = ansi black_bold
     let path_color = ansi green_bold
@@ -64,7 +55,7 @@ def create_left_prompt [] {
     let git = (
         if (( do { git branch --show-current } | complete ).exit_code != 0 ) { "" }
         else {
-            let d = git rev-parse --show-toplevel | with_home_char | with_tail_dir 2
+            let d = git rev-parse --show-toplevel | with-home-char | with-tail-dir 2
             [
                 $sep_color, "("
                 $git_color, (git branch --show-current)
@@ -75,7 +66,7 @@ def create_left_prompt [] {
     )
 
     let unm_color = ansi light_yellow_bold
-    let unm = $"($unm_color)($username)($sep_color)@($unm_color)($hostname)"
+    let unm = $"($unm_color)(username)($sep_color)@($unm_color)(hostname-short)"
 
     let power_char = (
         if (is-admin) {
@@ -160,11 +151,7 @@ $env.NU_PLUGIN_DIRS = [
 ]
 
 # OS-specific env setting
-if $is_mac {
-    source $"($nu.default-config-dir)/envs/macos.nu"
-} else if $is_win {
-    source $"($nu.default-config-dir)/envs/windows.nu"
-}
+use $"modules/env/($nu.os-info.name).nu"
 
 # lang settings
 # nvim will not function properly on UTF-8 chars without these settings

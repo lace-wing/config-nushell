@@ -2,6 +2,8 @@
 #
 # version = "0.88.1"
 
+use "modules/os.nu" *
+
 # For more information on defining custom themes, see
 # https://www.nushell.sh/book/coloring_and_theming.html
 # And here is the theme collection
@@ -815,7 +817,7 @@ $env.config = {
 }
 
 # off shell int for blinking in windows terminal
-$env.config.shell_integration = $nu.os-info.name != "windows"
+# $env.config.shell_integration = $nu.os-info.name != "windows"
 
 # zoxide init
 #FIX outdated zoxide, run this then fix manually
@@ -845,15 +847,15 @@ alias tnp = tmux new-session -A -s present -n slides
 # neovim
 alias v = nvim
 # DuckDuckGo using w3m
-def www [...q] {
-    if ( $q | length ) > 0 {
-        w3m $"https://www.duckduckgo.com/lite/?q=($q | str join ' ')"
-    } else if ($"($nu.home-path)/.w3m/bookmark.html" | path exists) {
-        w3m -B
-    } else {
-        w3m $"https://www.duckduckgo.com/lite/"
-    }
- }
+# def www [...q] {
+#     if ( $q | length ) > 0 {
+#         w3m $"https://www.duckduckgo.com/lite/?q=($q | str join ' ')"
+#     } else if ($"($nu.home-path)/.w3m/bookmark.html" | path exists) {
+#         w3m -B
+#     } else {
+#         w3m $"https://www.duckduckgo.com/lite/"
+#     }
+# }
 
 # rc alias
 
@@ -861,35 +863,15 @@ def www [...q] {
 alias rc = config nu
 # edit current shell's env rc
 alias erc = config env
-# edit TMUX config
-alias trc = nvim $"($env.XDG_CONFIG_HOME)/tmux/tmux.conf"
-# edit Neovim config
-alias nrc = nvim $"($env.XDG_CONFIG_HOME)/nvim/"
 
 # cd alias
 
-# cd to Documents
-alias cddoc = cd `~/Documents/`
-# cd to Downloads
-alias cddow = cd `~/Downloads/`
-# cd to Desktop
-alias cddes = cd `~/Desktop/`
-# cd to Saved Pictures
-alias cdpic = cd `~/Pictures/Saved Pictures/`
-# cd to Screen Shot
-alias cdshot = cd `~/Pictures/Screen Shot/`
-# cd to Movies
-alias cdmov = cd `~/Movies/`
-# cd to Application Support
-alias cdaps = cd `~/Library/Application Support/`
-#cd to com~apple~CloudDocs (iCloud Documents)
-alias cdic = cd `~/Library/Mobile Documents/com~apple~CloudDocs`
-# cd to tModLoader/ModSources
-alias cdtm = cd `~/Library/Application Support/Terraria/tModLoader/ModSources/`
 # cd to current git's root dir
 alias cdgit = cd (git rev-parse --show-toplevel)
 
+use $"modules/config/($nu.os-info.name).nu" *
+
 # enter tmux
-if $nu.os-info.name != "windows" {
+if not (is-win) {
     tmux new-session -A -s general -n main
 }
