@@ -31,3 +31,5 @@ export alias cdtm = cd `~/Library/Application Support/Terraria/tModLoader/ModSou
 
 # macOS' open
 export alias op = ^open
+# open after fzf
+export alias fp = ^open (fzf) 
