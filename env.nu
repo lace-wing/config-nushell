@@ -38,6 +38,8 @@ def create_left_prompt [] {
     let sep_color = ansi black_bold
     let path_color = ansi green_bold
     let path_sep_color = ansi cyan_bold
+    let unm_color = ansi light_yellow_bold
+    let git_color = ansi blue_bold
 
     def path_leader [] = {
         if (($in | str starts-with "~") or ($in | str starts-with "/")) {
@@ -51,21 +53,23 @@ def create_left_prompt [] {
         $"($path_color)($dir)" | str replace --all (char path_sep) $"($path_sep_color)(char path_sep)($path_color)"
     )
 
-    let git_color = ansi blue_bold
     let git = (
-        if (( do { git branch --show-current } | complete ).exit_code != 0 ) { "" }
+        if (( do { git branch } | complete ).exit_code != 0 ) { "" }
         else {
-            let d = git rev-parse --show-toplevel | with-home-char | with-tail-dir 2
+            let git_stats = (git status --porcelain --branch | split row (char newline) | first )
+            mut stats = $git_stats | parse "## {branch}...{remote} {prog}"
+            if ($stats | is-empty) { $stats = ($git_stats | parse "## {branch}...{remote}" | insert prog "[0]") }
+            let prog = (
+                if ($stats.prog | is-empty) { { prog: "" } }
+                else $stats.prog.0 | str replace "ahead " "+" | str replace "behind " "-" | str replace "[" $"($sep_color)[($git_color)" | str replace "]" $"($sep_color)]"
+            )
             [
-                $sep_color, "("
-                $git_color, (git branch --show-current)
-                $sep_color, ($d | path_leader)
-                $git_color, $d
-                $sep_color, ")"
+                $git_color, "  "
+                $stats.branch.0
+                $prog
         ] | str join }
     )
 
-    let unm_color = ansi light_yellow_bold
     let unm = $"($unm_color)(username)($sep_color)@($unm_color)(hostname-short)"
 
     let power_char = (
@@ -76,7 +80,7 @@ def create_left_prompt [] {
         }
     )
 
-    [$unm, ($dir | path_leader), $path, " ", $git, (char newline), $power_char] | str join
+    [$unm, ($dir | path_leader), $path, $git, (char newline), $power_char] | str join
 }
 
 def create_right_prompt [] {
