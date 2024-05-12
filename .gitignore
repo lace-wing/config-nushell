@@ -1,4 +1,6 @@
-#macOS
+# macOS
 .DS_Store
 
+# nushell
 history.txt
+*.msgpackz

@@ -839,11 +839,11 @@ alias lla = ls -la
 # attach or create a TMUX session
 alias tt = tmux new-session -A -s
 # attach or create a TMUX session, named "general" with a window "main"
-alias ttg = tmux new-session -A -s general -n main
+alias ttg = tmux new-session -A -s general
 # attach or create a TMUX session, named "word" with a window "main"
-alias ttw = tmux new-session -A -s work -n main
+alias ttw = tmux new-session -A -s work
 # attach or create a TMUX session, named "present" with a window "slides"
-alias ttp = tmux new-session -A -s present -n slides
+alias ttp = tmux new-session -A -s present
 # attach or create a TMUX session, named "files" with a window "yazi" and program yazi open
 def ttf [dest: string = ""] {
     tmux new-session -A -s files -n yazi

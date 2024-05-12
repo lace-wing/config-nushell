@@ -4,6 +4,11 @@
 
 # os compat
 use $"($nu.default-config-dir)/modules/os.nu" *
+# OS-specific env setting
+use $"($nu.default-config-dir)/modules/env/($nu.os-info.name).nu"
+
+# gstat
+plugin add ((which nu_plugin_gstat).path.0)
 
 # let good_emo = [ '😎', '🥰', '🤤', '😘' ]
 # let bad_emo = [ '😭 ', '😅 ', '🤣👉 ', '💀 ', '🤡 ', '🥵 ' ]
@@ -53,21 +58,39 @@ def create_left_prompt [] {
         $"($path_color)($dir)" | str replace --all (char path_sep) $"($path_sep_color)(char path_sep)($path_color)"
     )
 
+    let stats = gstat
     let git = (
-        if (( do { git branch } | complete ).exit_code != 0 ) { "" }
+        if ($stats.repo_name == "no_repository") { "" }
         else {
-            let git_stats = (git status --porcelain --branch | split row (char newline) | first )
-            mut stats = $git_stats | parse "## {branch}...{remote} {prog}"
-            if ($stats | is-empty) { $stats = ($git_stats | parse "## {branch}...{remote}" | insert prog "[0]") }
-            let prog = (
-                if ($stats.prog | is-empty) { { prog: "" } }
-                else $stats.prog.0 | str replace "ahead " "+" | str replace "behind " "-" | str replace "[" $"($sep_color)[($git_color)" | str replace "]" $"($sep_color)]"
+            let sts = $stats.stashes != 0
+            let wt = (
+                $stats.wt_untracked != 0
+                or $stats.wt_modified != 0
+                or $stats.wt_deleted != 0
+                or $stats.wt_type_changed != 0
+                or $stats.wt_renamed != 0
             )
+            let idx = (
+                $stats.idx_added_staged != 0
+                or $stats.idx_modified_staged != 0
+                or $stats.idx_deleted_staged != 0
+                or $stats.idx_renamed != 0
+                or $stats.idx_type_changed != 0
+            )
+            let unsy = (
+                $stats.ahead != 0
+                or $stats.behind != 0
+            )
+            let cnft = $stats.conflicts != 0
             [
-                $git_color, "  "
-                $stats.branch.0
-                $prog
-        ] | str join }
+                $sep_color, "  ", $git_color, $stats.repo_name
+                $"($sep_color)  ($git_color)", $stats.branch
+                (if $sts { $"(ansi light_yellow) " })
+                (if $wt or $idx { $"(ansi light_red) " })
+                (if $unsy { $"(ansi light_red) " })
+                (if $cnft { $"(ansi light_red) " })
+            ] | str join
+        }
     )
 
     let unm = $"($unm_color)(username)($sep_color)@($unm_color)(hostname-short)"
@@ -153,9 +176,6 @@ $env.NU_LIB_DIRS = [
 $env.NU_PLUGIN_DIRS = [
     ($nu.default-config-dir | path join 'plugins') # add <nushell-config-dir>/plugins
 ]
-
-# OS-specific env setting
-use $"($nu.default-config-dir)/modules/env/($nu.os-info.name).nu"
 
 # lang settings
 # nvim will not function properly on UTF-8 chars without these settings
