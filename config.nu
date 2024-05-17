@@ -821,10 +821,10 @@ $env.config = {
 
 # zoxide init
 #FIX outdated zoxide, run this then fix manually
-# zoxide init nushell | save -f ~/.zoxide.nu
+zoxide init nushell | save -f ~/.zoxide.nu
 source ~/.zoxide.nu
-# alias cd to z, zoxide init required
 
+# alias cd to z, zoxide init required
 # cd via z
 alias cd = z
 
