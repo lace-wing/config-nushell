@@ -33,8 +33,8 @@ def create_left_prompt [] {
 
     let sep_color = ansi black_bold
     let path_color = ansi green_bold
-    let path_sep_color = ansi cyan_bold
-    let unm_color = ansi light_yellow_bold
+    let path_sep_color = $sep_color
+    let unm_color = $path_color
     let git_color = ansi blue_bold
 
     def path_leader [] = {
