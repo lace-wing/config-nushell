@@ -851,6 +851,9 @@ def ttf [dest: string = ""] {
 }
 # neovim
 alias v = nvim
+# nvim after fzf
+alias vv = nvim (fzf)
+
 # DuckDuckGo using w3m
 # def www [...q] {
 #     if ( $q | length ) > 0 {
