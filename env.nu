@@ -7,6 +7,10 @@ use $"($nu.default-config-dir)/modules/os.nu" *
 # OS-specific env setting
 use $"($nu.default-config-dir)/modules/env/($nu.os-info.name).nu"
 
+# record initial username and short hostname (machine name)
+let uname = username
+let hname = hostname-short
+
 # gstat
 plugin add ((which nu_plugin_gstat).path.0)
 
@@ -34,10 +38,10 @@ def create_left_prompt [] {
     let sep_color = ansi black_bold
     let path_color = ansi green_bold
     let path_sep_color = $sep_color
-    let unm_color = $path_color
+    let unm_color = ansi yellow_bold
     let git_color = ansi blue_bold
 
-    def path_leader [] = {
+    def path-leader [] = {
         if (($in | str starts-with "~") or ($in | str starts-with "/")) {
             $"($sep_color):"
         } else {
@@ -45,12 +49,12 @@ def create_left_prompt [] {
         }
     }
 
-    let path = (
+    let seg_path = (
         $"($path_color)($dir)" | str replace --all (char path_sep) $"($path_sep_color)(char path_sep)($path_color)"
     )
 
     let stats = gstat
-    let git = (
+    let seg_git = (
         if ($stats.repo_name == "no_repository") { "" }
         else {
             let sts = $stats.stashes != 0
@@ -83,9 +87,26 @@ def create_left_prompt [] {
         }
     )
 
-    let unm = $"($unm_color)(username)($sep_color)@($unm_color)(hostname-short)"
+    let seg_user = (
+        let u = username;
+        if ($u) != $uname { $"($unm_color)($u)" }
+    )
+    let seg_host = (
+        let h = hostname-short;
+        if ($h) != $hname { $"($unm_color)($h)" }
+    )
+    let seg_unm = ([
+        $seg_user
+        (if ($seg_user | is-not-empty) and ($seg_host | is-not-empty) {
+            $"($sep_color)@"
+        })
+        $seg_host
+        (if ($seg_user | is-not-empty) or ($seg_host | is-not-empty) {
+            ($dir | path-leader)
+        })
+    ] | str join)
 
-    let power_char = (
+    let seg_power_char = (
         if (is-admin) {
             $"(ansi light_red_bold)#"
         } else {
@@ -93,7 +114,7 @@ def create_left_prompt [] {
         }
     )
 
-    [$unm, ($dir | path_leader), $path, $git, (char newline), $power_char] | str join
+    [$seg_unm, $seg_path, $seg_git, (char newline), $seg_power_char] | str join
 }
 
 def create_right_prompt [] {
