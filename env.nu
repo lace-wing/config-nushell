@@ -8,8 +8,7 @@ use $"($nu.default-config-dir)/modules/os.nu" *
 use $"($nu.default-config-dir)/modules/env/($nu.os-info.name).nu"
 
 # record initial username and short hostname (machine name)
-let uname = username
-let hname = hostname-short
+let orig_uname = username
 
 # gstat
 plugin add ((which nu_plugin_gstat).path.0)
@@ -89,22 +88,17 @@ def create_left_prompt [] {
 
     let seg_user = (
         let u = username;
-        if ($u) != $uname { $"($unm_color)($u)" }
+        if ($u) != $orig_uname { $"($unm_color)($u)" }
     )
-    let seg_host = (
-        let h = hostname-short;
-        if ($h) != $hname { $"($unm_color)($h)" }
-    )
-    let seg_unm = ([
-        $seg_user
-        (if ($seg_user | is-not-empty) and ($seg_host | is-not-empty) {
+    let seg_unm = (
+        if ($seg_user | is-not-empty) {[
+            $seg_user
             $"($sep_color)@"
-        })
-        $seg_host
-        (if ($seg_user | is-not-empty) or ($seg_host | is-not-empty) {
+            (hostname-short)
             ($dir | path-leader)
-        })
-    ] | str join)
+            ] | str join
+        } else { "" }
+    )
 
     let seg_power_char = (
         if (is-admin) {
