@@ -8,8 +8,10 @@ export-env {
         | prepend "/opt/homebrew/opt/python@3.12/libexec/bin" # add homebrew python symlinks
     )
 
-    # XDG CONFIG
+    # XDG
     $env.XDG_CONFIG_HOME = $"($nu.home-path)/.config"
+    $env.XDG_DATA_HOME = $"($nu.home-path)/.local/share"
+    $env.XDG_STATE_HOME = $"($nu.home-path)/.local/state"
 
     # homebrew dotnet
     $env.DOTNET_ROOT = '/opt/homebrew/bin/dotnet'
