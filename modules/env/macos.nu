@@ -1,11 +1,12 @@
 export-env {
     $env.PATH = ($env.PATH | split row (char esep)
-        | prepend "/opt/homebrew/bin" # add homebrew
-        | prepend "/opt/homebrew/sbin" # homebrew
-        | prepend "/nix/var/nix/profiles/default/bin" # add nix
-        | prepend $"($nu.home-path)/.nix-profile/bin" # add nix-env path
-        | prepend $"($nu.home-path)/.dotnet/tools" # add dotnet tools
-        | prepend "/opt/homebrew/opt/python@3.12/libexec/bin" # add homebrew python symlinks
+        | prepend "/opt/homebrew/bin" # homebrew
+        | prepend "/opt/homebrew/sbin" # also homebrew
+        | prepend "/nix/var/nix/profiles/default/bin" # nix
+        | prepend $"($nu.home-path)/.nix-profile/bin" # nix-env path
+        | prepend $"($nu.home-path)/.dotnet/tools" # dotnet tools
+        | prepend "/opt/homebrew/opt/python@3.12/libexec/bin" # homebrew python symlinks
+        | append $"($nu.home-path)/.local/bin" # local bin
     )
 
     # XDG
