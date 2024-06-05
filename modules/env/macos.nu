@@ -6,7 +6,7 @@ export-env {
         | prepend $"($nu.home-path)/.nix-profile/bin" # nix-env path
         | prepend $"($nu.home-path)/.dotnet/tools" # dotnet tools
         | prepend "/opt/homebrew/opt/python@3.12/libexec/bin" # homebrew python symlinks
-        | append $"($nu.home-path)/.local/bin" # local bin
+        | prepend $"($nu.home-path)/.local/bin" # local bin
     )
 
     # XDG
