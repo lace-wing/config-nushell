@@ -4,3 +4,7 @@
 # nushell
 history.txt
 *.msgpackz
+
+# locals
+local-*
+local-*/*
