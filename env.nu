@@ -7,7 +7,7 @@ use $"($nu.default-config-dir)/modules/os.nu" *
 # OS-specific env setting
 use $"($nu.default-config-dir)/modules/env/($nu.os-info.name).nu"
 # OS-specific local evn setting
-if ($"($nu.default-config-dir)/modules/env/local-($nu.os-info.name).nu"  | path exists) {
+if ($"($nu.default-config-dir)/modules/env/local-($nu.os-info.name).nu" | path exists) {
     use $"($nu.default-config-dir)/modules/env/local-($nu.os-info.name).nu"
 }
 
