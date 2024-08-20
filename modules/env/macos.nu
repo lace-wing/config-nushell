@@ -4,8 +4,8 @@ export-env {
         | prepend "/opt/homebrew/sbin" # also homebrew
         | prepend "/nix/var/nix/profiles/default/bin" # nix
         | prepend $"($nu.home-path)/.nix-profile/bin" # nix-env path
-        | prepend $"($nu.home-path)/.dotnet/tools" # dotnet tools
-        | prepend $"($nu.home-path)/.ghcup/bin" # ghcup tools
+        | append $"($nu.home-path)/.dotnet/tools" # dotnet tools
+        | append $"($nu.home-path)/.ghcup/bin" # ghcup tools
         | prepend "/opt/homebrew/opt/python@3.12/libexec/bin" # homebrew python symlinks
         | append $"($nu.home-path)/Library/Python/3.11/bin" # python user site packages
         | append $"($nu.home-path)/Library/Python/3.12/bin" # python user site packages
