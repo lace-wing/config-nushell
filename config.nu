@@ -915,5 +915,7 @@ use $"($nu.default-config-dir)/modules/config/($nu.os-info.name).nu" *
 
 # enter tmux
 if not (is-win) {
-    tmux new-session -A -s general -n main
+    try {
+        tmux new-session -A -s general -n main
+    }
 }
