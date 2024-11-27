@@ -198,7 +198,7 @@ let external_completer = {|spans|
         __zoxide_z | __zoxide_zi => $zoxide_completer
         dotnet => $dotnet_completer
         toot => $toot_completer
-        nu | nb => $fish_completer
+        nu | nb | arduino-cli | yq | vd => $fish_completer
         _ => $carapace_completer
     } | do $in $spans
 }
@@ -883,6 +883,12 @@ def ttf [dest: string = ""] {
     tmux new-session -A -s files -n yazi
     yazi $dest
 }
+
+# read pipe with nvim, like +Man!
+alias nvim-read = nvim - $in -c 'set buftype=nofile' -c 'set bufhidden=delete' -c 'set noswapfile' -c 'set nomodifiable' -c 'set nolist' -c 'set nomodified' -c 'set noreadonly'
+
+# program alias
+
 # neovim
 alias v = nvim
 # nvim after fzf
@@ -912,6 +918,7 @@ alias erc = config env
 alias cdgit = cd (git rev-parse --show-toplevel)
 
 use $"($nu.default-config-dir)/modules/config/($nu.os-info.name).nu" *
+
 
 # enter tmux
 if not (is-win) {

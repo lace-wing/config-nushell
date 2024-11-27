@@ -33,3 +33,6 @@ export alias cdtm = cd `~/Library/Application Support/Terraria/tModLoader/ModSou
 export alias op = ^open
 # open after fzf
 export alias fp = ^open (fzf) 
+
+# built ghostty
+export alias ghostty = `~/src/ghostty/macos/build/ReleaseLocal/Ghostty.app/Contents/MacOS/ghostty`
