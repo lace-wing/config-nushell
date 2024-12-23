@@ -38,13 +38,13 @@ def create_left_prompt [] {
     let home =  $nu.home-path
     let dir = $env.PWD | with-home-char | with-tail-dir
 
-    let sep_color = ansi black_bold
+    let sep_color = ansi white_bold
     let path_color = ansi green_bold
     let path_sep_color = $sep_color
     let unm_color = ansi yellow_bold
     let git_color = ansi blue_bold
 
-    def path-leader [] = {
+    def path-leader [] {
         if (($in | str starts-with "~") or ($in | str starts-with "/")) {
             $"($sep_color):"
         } else {

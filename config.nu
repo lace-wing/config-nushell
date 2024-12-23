@@ -917,8 +917,10 @@ alias erc = config env
 # cd to current git's root dir
 alias cdgit = cd (git rev-parse --show-toplevel)
 
-use $"($nu.default-config-dir)/modules/config/($nu.os-info.name).nu" *
+# ed alias
+alias ed = rlwrap -c -r -- ed -p '> '
 
+use $"($nu.default-config-dir)/modules/config/($nu.os-info.name).nu" *
 
 # enter tmux
 if not (is-win) {
