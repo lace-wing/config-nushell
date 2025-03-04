@@ -22,13 +22,11 @@ export-env {
 
     # homebrew dotnet
     $env.DOTNET_ROOT = '/opt/homebrew/bin/dotnet'
+    $env.DOTNET_ROOT = "/opt/homebrew/opt/dotnet@8/libexec"
 
     # omnisharp config home
     $env.OMNISHARPHOME = $"($nu.home-path)/.config/"
 
     # find dylib at runtime in /usr/local/lib
     $env.DYLD_LIBRARY_PATH = "/usr/local/lib"
-
-    # ghostty envs
-    $env.GHOSTTY_RESOURCES_DIR = $"($nu.home-path)/src/ghostty/zig-out/share/ghostty"
 }
