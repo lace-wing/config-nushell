@@ -28,4 +28,7 @@ export-env {
 
     # find dylib at runtime in /usr/local/lib
     $env.DYLD_LIBRARY_PATH = "/usr/local/lib"
+
+    # API Keys
+    $env.OPENAI_API_KEY = (cat ~/Documents/archives/openai/api-keys.toml | from toml | get personal.general.text)
 }

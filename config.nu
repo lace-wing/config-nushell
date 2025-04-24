@@ -929,5 +929,6 @@ use $"($nu.default-config-dir)/modules/config/($nu.os-info.name).nu" *
 if not (is-win) {
     try {
         tmux new-session -A -s general -n main
+        tmux detach-client
     }
 }
