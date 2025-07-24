@@ -145,20 +145,26 @@ let light_theme = {
 
 # carapace completion
 
-let carapace_completer = {|spans|
-  # if the current command is an alias, get it's expansion
-  let expanded_alias = (scope aliases | where name == $spans.0 | get -i 0 | get -i expansion)
+# let carapace_completer = {|spans|
+#   # if the current command is an alias, get it's expansion
+#   let expanded_alias = (scope aliases | where name == $spans.0 | get 0 | get expansion)
+#
+#   # overwrite
+#   let spans = (if $expanded_alias != null  {
+#     # put the first word of the expanded alias first in the span
+#     $spans | skip 1 | prepend ($expanded_alias | split row " " | take 1)
+#   } else {
+#     $spans
+#   })
+#
+#   carapace $spans.0 nushell ...$spans
+#   | from json
+# }
 
-  # overwrite
-  let spans = (if $expanded_alias != null  {
-    # put the first word of the expanded alias first in the span
-    $spans | skip 1 | prepend ($expanded_alias | split row " " | take 1)
-  } else {
-    $spans
-  })
-
-  carapace $spans.0 nushell ...$spans
-  | from json
+let carapace_completer = {|spans: list<string>|
+    carapace $spans.0 nushell ...$spans
+    | from json
+    | if ($in | default [] | where value =~ '^-.*ERR$' | is-empty) { $in } else { null }
 }
 
 let fish_completer = {|spans|
@@ -184,7 +190,7 @@ let dotnet_completer = { |spans|
 let external_completer = {|spans|
     let expanded_alias = scope aliases
     | where name == $spans.0
-    | get -i 0.expansion
+    | get 0.expansion
 
     let spans = if $expanded_alias != null {
         $spans
@@ -198,7 +204,7 @@ let external_completer = {|spans|
         __zoxide_z | __zoxide_zi => $zoxide_completer
         dotnet => $dotnet_completer
         toot => $toot_completer
-        nu | nb | arduino-cli | yq | vd => $fish_completer
+        nu | nb | arduino-cli | yq | vd | sing-box => $fish_completer
         _ => $carapace_completer
     } | do $in $spans
 }

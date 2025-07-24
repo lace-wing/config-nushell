@@ -34,3 +34,5 @@ export alias open = ^open
 export alias op = ^open
 # open after fzf
 export alias fp = ^open (fzf) 
+# plover
+export alias plover = /Applications/Plover.app/Contents/MacOS/Plover
