@@ -145,27 +145,27 @@ let light_theme = {
 
 # carapace completion
 
-# let carapace_completer = {|spans|
-#   # if the current command is an alias, get it's expansion
-#   let expanded_alias = (scope aliases | where name == $spans.0 | get 0 | get expansion)
-#
-#   # overwrite
-#   let spans = (if $expanded_alias != null  {
-#     # put the first word of the expanded alias first in the span
-#     $spans | skip 1 | prepend ($expanded_alias | split row " " | take 1)
-#   } else {
-#     $spans
-#   })
-#
-#   carapace $spans.0 nushell ...$spans
-#   | from json
-# }
+let carapace_completer = {|spans|
+  # if the current command is an alias, get it's expansion
+  let expanded_alias = (scope aliases | where name == $spans.0 | get -o 0 | get -o expansion)
 
-let carapace_completer = {|spans: list<string>|
-    carapace $spans.0 nushell ...$spans
-    | from json
-    | if ($in | default [] | where value =~ '^-.*ERR$' | is-empty) { $in } else { null }
+  # overwrite
+  let spans = (if $expanded_alias != null  {
+    # put the first word of the expanded alias first in the span
+    $spans | skip 1 | prepend ($expanded_alias | split row " " | take 1)
+  } else {
+    $spans
+  })
+
+  carapace $spans.0 nushell ...$spans
+  | from json
 }
+
+# let carapace_completer = {|spans: list<string>|
+#     carapace $spans.0 nushell ...$spans
+#     | from json
+#     | if ($in | default [] | where value =~ '^-.*ERR$' | is-empty) { $in } else { null }
+# }
 
 let fish_completer = {|spans|
     fish --command $'complete "--do-complete=($spans | str join " ")"'
@@ -190,7 +190,7 @@ let dotnet_completer = { |spans|
 let external_completer = {|spans|
     let expanded_alias = scope aliases
     | where name == $spans.0
-    | get 0.expansion
+    | get -o 0.expansion
 
     let spans = if $expanded_alias != null {
         $spans
