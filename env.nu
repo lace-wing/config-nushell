@@ -81,7 +81,7 @@ def create_left_prompt [] {
             )
             let cnft = $stats.conflicts != 0
             [
-                $"($sep_color)  ($git_color)", $stats.branch
+                $"($sep_color)   ($git_color)", $stats.branch
                 (if $sts { $"(ansi light_yellow) " })
                 (if $wt or $idx { $"(ansi light_red) " })
                 (if $unsy { $"(ansi light_red) " })
