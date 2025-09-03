@@ -29,6 +29,14 @@ export alias cdtm = cd `~/Library/Application Support/Terraria/tModLoader/ModSou
 
 # program alias
 
+
+# homebrew opt's
+
+def lshbopt [] { ls `/opt/homebrew/opt` --short-names | get name }
+
+export def hbopt [
+    name?: string@lshbopt
+] { $"/opt/homebrew/opt/($name | default "")" }
 # macOS' open
 export alias open = ^open
 export alias op = ^open
